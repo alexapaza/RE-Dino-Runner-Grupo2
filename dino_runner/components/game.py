@@ -19,7 +19,7 @@ class Game:
 
         self.player = Dinosaur()
         self.obstacle_manager = ObstacleManager()
-
+ 
     def run(self):
         # Game loop: events - update - draw
         self.playing = True
@@ -35,6 +35,9 @@ class Game:
                 self.playing = False
 
     def update(self):
+        user_input = pygame.key.get_pressed()
+        self.player.update(user_input)
+
         self.obstacle_manager.update(self)
 
     def draw(self):
