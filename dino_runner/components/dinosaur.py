@@ -26,6 +26,15 @@ class Dinosaur():
         self.dino_jump = False
         self.jump_vel = self.JUMP_VEL
 
+        self.setup_state_boolean()
+
+    def setup_state_boolean(self):
+        self.has_powerup = False 
+        self.shield =False 
+        self.show_text=False 
+        self.shield_time_up=0   
+
+
     def update(self,user_input):
         if self.dino_jump:
             self.jump()
@@ -74,26 +83,26 @@ class Dinosaur():
             self.dino_jump = False
             self.jump_vel = self.JUMP_VEL
     
-    """
-    def check_invincibility(self, screen):
+
+    def check_visibility(self,screen):
         if self.shield:
-            time_to_show = round((self.shield_time_up - pygame.time.get_ticks()) / 1000, 2)
-            if time_to_show >= 0:
-                if self.show_text:
-                    fond = pygame.font.Font('freesansbold.ttf', 18)
-                    text = fond.render(f'Shield enabled for {time_to_show}',
-                                       True,
-                                       (0, 0, 0))
-                    textRect = text.get_rect()
-                    textRect.center = (500, 40)
-                    screen.blit(text, textRect)
+            time_to_show = round( (self.shield_time_up - pygame.time.get_ticks())/1000,2 )
+            if(time_to_show>=0):
+                fond = pygame.font.Font('freesansbold.ttf',18)
+                text = fond.render(f'shield enable for {time_to_show}',True,(0,0,0))
+                textRect = text.get_rect()
+                textRect.center = (500,40)
+                screen.blit(text,textRect)
             else:
-                self.shield = False
-                self.update_to_default (SHIELD_TYPE)
-    """
-    def update_to_default (self, current_type):
-        if self.type == current_type:
+                self.shield = False 
+                self.update_to_default(SHIELD_TYPE)
+
+    def update_to_default(self, current_type):
+        if(self.type == current_type):
             self.type = DEFAULT_TYPE
+
+
+   
 
     def draw(self, screen):
         screen.blit(self.image, (self.dino_rect.x, self.dino_rect.y))

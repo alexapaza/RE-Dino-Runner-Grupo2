@@ -6,6 +6,7 @@ from dino_runner.components.player_hearts.player_heart_manager import PlayerHear
 from dino_runner.utils.constants import BG, ICON, SCREEN_HEIGHT, SCREEN_WIDTH, TITLE, FPS
 from dino_runner.components.dinosaur import Dinosaur
 from dino_runner.components.obstaculomanager import ObstacleManager
+from dino_runner.components.power_up.power_up_manager import PowerUpManager
 
 
 class Game:
@@ -21,18 +22,26 @@ class Game:
         self.y_pos_bg = 380
         self.points = 0
 
+        self.death_count = 0
+
         self.player = Dinosaur()
         self.obstacle_manager = ObstacleManager()
         self.player_heart_manager = PlayerHeartManager()
+        self.power_up_manager = PowerUpManager()
+
  
     def run(self):
         # Game loop: events - update - draw
+        self.create_comment()
         self.playing = True
         while self.playing:
             self.events()
             self.update()
             self.draw()
         pygame.quit()
+
+    def create_comment(self):
+        self.power_up_manager.reset_power_ups(self.points)
 
     def events(self):
         for event in pygame.event.get():
@@ -42,7 +51,7 @@ class Game:
     def update(self):
         user_input = pygame.key.get_pressed()
         self.player.update(user_input)
-
+        self.power_up_manager.update(self.points, self.game_speed, self.player)
         self.obstacle_manager.update(self)
 
     def draw(self):
@@ -52,6 +61,7 @@ class Game:
         self.player.draw(self.screen)
         self.obstacle_manager.draw(self.screen)
         self.player_heart_manager.draw(self.screen)
+        self.power_up_manager.draw(self.screen)
         self.score()
 
         pygame.display.update()
@@ -73,4 +83,5 @@ class Game:
         if self.points % 100 == 0:
             self.game_speed += 1
         score, score_rect = get_score_element(self.points)
+        self.player.check_visibility(self.screen)
         self.screen.blit(score, score_rect)
